@@ -1,0 +1,159 @@
+/* Products Section Styles */
+.products {
+  padding: var(--spacing-3xl) var(--spacing-md);
+  background-color: var(--color-bg);
+}
+
+.products-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  text-align: center;
+  font-size: var(--font-size-2xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-2xl);
+  color: var(--color-text);
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+  margin-bottom: var(--spacing-2xl);
+}
+
+.product-card {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-primary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.product-content {
+  padding: var(--spacing-lg);
+}
+
+.product-name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-primary);
+}
+
+.product-description {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--spacing-md);
+}
+
+.product-details {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  background: var(--color-bg-tertiary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  line-height: var(--line-height-normal);
+}
+
+.product-details strong {
+  color: var(--color-text);
+  display: block;
+  margin-top: var(--spacing-sm);
+}
+
+.product-details strong:first-child {
+  margin-top: 0;
+}
+
+/* Divider Line with Dot */
+.products-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: var(--spacing-2xl) 0;
+  position: relative;
+}
+
+.products-divider::before,
+.products-divider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--color-border), transparent);
+}
+
+.products-divider::before {
+  margin-right: var(--spacing-md);
+}
+
+.products-divider::after {
+  margin-left: var(--spacing-md);
+}
+
+.divider-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--color-bg), 0 0 0 6px var(--color-border);
+  z-index: 1;
+}
+
+/* Additional Products Grid (Buffalo & Cattle Tendon) */
+.additional-products {
+  margin-top: var(--spacing-2xl);
+}
+
+.additional-products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-xl);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .products {
+    padding: var(--spacing-2xl) var(--spacing-md);
+  }
+  
+  .section-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .products-grid,
+  .additional-products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .products-divider {
+    margin: var(--spacing-xl) 0;
+  }
+}

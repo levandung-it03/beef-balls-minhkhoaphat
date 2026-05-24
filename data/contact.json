@@ -1,0 +1,59 @@
+{
+  "sales": {
+    "title": "👩‍💼 Quản lý bán hàng",
+    "items": [
+      {
+        "name": "Chi Huệ",
+        "phone": "082 5689824",
+        "href": "https://zalo.me/0825689824"
+      }
+    ]
+  },
+  "dayDelivery": {
+    "title": "🚚 Giao hàng ca sáng & tỉnh",
+    "items": [
+      {
+        "name": "Anh Đến",
+        "phone": "090 9681659",
+        "href": "https://zalo.me/0909681659"
+      },
+      {
+        "name": "Quốc Việt",
+        "phone": "086 5078892",
+        "href": "https://zalo.me/0865078892"
+      }
+    ]
+  },
+  "nightDelivery": {
+    "title": "⏰ Xử lý giao hàng ca chiều",
+    "items": [
+      {
+        "name": "Anh Khoa",
+        "phone": "+84 90 9269441",
+        "href": "https://zalo.me/0909269441"
+      },
+      {
+        "name": "Anh Thiên",
+        "phone": "090 2339633",
+        "href": "https://zalo.me/0902339633"
+      },
+      {
+        "name": "Anh Vượng",
+        "phone": "+84 90 9094995",
+        "href": "https://zalo.me/0909094995"
+      }
+    ]
+  },
+  "manager": {
+    "title": "🍀 Khiếu nại & Tương thương",
+    "items": [
+      {
+        "name": "Chị Nga",
+        "phone": "090 2047479",
+        "href": "https://zalo.me/0902047479"
+      }
+    ],
+    "subtitle": "Xin cảm ơn quý khách hàng!!!",
+    "note": "Nhận thương lượng trao đổi về số lượng lớn và chịu trách nhiệm pháp lý"
+  }
+}
