@@ -1,0 +1,34 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Bò Viên Regular",
+      "price": 50000,
+      "description": "Bò viên thường ngon ngon",
+      "image": "regular-ball.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Bò Viên Gân",
+      "price": 60000,
+      "description": "Bò viên với gân trâu",
+      "image": "tendon-ball.jpg"
+    },
+    {
+      "id": 3,
+      "name": "Bò Viên Gân Super",
+      "price": 75000,
+      "description": "Bò viên gân trâu siêu ngon",
+      "image": "super-tendon-ball.jpg"
+    }
+  ],
+  "promotions": [
+    {
+      "id": 1,
+      "title": "Khuyến mại tuần này",
+      "description": "Mua 2kg giảm 10%",
+      "discount": 10,
+      "validUntil": "2024-12-31"
+    }
+  ]
+}

@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Admin - Quản lý dữ liệu">
+    <title>Admin - Quản lý dữ liệu</title>
+    <link rel="stylesheet" href="../css/root.css">
+    <style>
+        /* Admin Styles */
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-2xl);
+            border-bottom: 2px solid var(--color-border);
+            padding-bottom: var(--spacing-lg);
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            color: var(--color-primary);
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .admin-tab-btn {
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--color-text-light);
+            font-size: var(--font-size-base);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .admin-tab-btn.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+            background: none;
+        }
+
+        .admin-tab-btn:hover {
+            background: none;
+            color: var(--color-text);
+        }
+
+        .admin-content {
+            display: none;
+        }
+
+        .admin-content.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-section {
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid var(--color-border);
+        }
+
+        .form-section h2 {
+            margin-top: 0;
+            color: var(--color-primary);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: var(--font-size-base);
+            color: var(--color-text);
+            background-color: var(--color-bg);
+            transition: border-color var(--transition-fast);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(212, 112, 95, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-lg);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-bg-tertiary);
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-danger {
+            background-color: #D9534F;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #C9302C;
+        }
+
+        .btn-success {
+            background-color: var(--color-accent);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #2D5016;
+        }
+
+        /* List Styles */
+        .item-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .item-card {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-info h3 {
+            margin: 0 0 var(--spacing-sm) 0;
+            font-size: var(--font-size-lg);
+        }
+
+        .item-info p {
+            margin: var(--spacing-xs) 0;
+            color: var(--color-text-light);
+            font-size: var(--font-size-sm);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .item-actions button {
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--color-bg);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--color-border);
+            padding-bottom: var(--spacing-lg);
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            color: var(--color-text-light);
+            width: auto;
+            padding: 0;
+            height: auto;
+        }
+
+        .close-btn:hover {
+            color: var(--color-text);
+            transform: none;
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .status-message.active {
+            display: block;
+        }
+
+        .status-message.success {
+            background-color: #DFF0D8;
+            color: #3C763D;
+            border: 1px solid #D6E9C6;
+        }
+
+        .status-message.error {
+            background-color: #F2DEDE;
+            color: #A94442;
+            border: 1px solid #EBCCD1;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: var(--spacing-md);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .item-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-actions {
+                width: 100%;
+                margin-top: var(--spacing-md);
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group button {
+                width: 100%;
+            }
+        }
+
+        /* Data Export/Import */
+        .data-section {
+            background: var(--color-bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            border: 1px solid var(--color-border);
+        }
+
+        .data-section h3 {
+            margin-top: 0;
+        }
+
+        .json-display {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            font-family: 'Courier New', monospace;
+            font-size: var(--font-size-sm);
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .json-display code {
+            color: var(--color-text);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Admin - Quản lý dữ liệu</h1>
+            <a href="../index.html" style="color: var(--color-primary);">← Quay lại trang chủ</a>
+        </div>
+
+        <div class="status-message" id="statusMessage"></div>
+
+        <div class="admin-tabs">
+            <button class="admin-tab-btn active" data-tab="contact">Quản lý liên hệ</button>
+            <button class="admin-tab-btn" data-tab="sales">Quản lý bán hàng</button>
+            <button class="admin-tab-btn" data-tab="export">Xuất/Nhập dữ liệu</button>
+        </div>
+
+        <!-- Contact Management Tab -->
+        <div class="admin-content active" id="contact-tab">
+            <div class="form-section">
+                <h2>Quản lý dữ liệu liên hệ</h2>
+                <div id="contactSections"></div>
+            </div>
+        </div>
+
+        <!-- Sales Management Tab -->
+        <div class="admin-content" id="sales-tab">
+            <div class="form-section">
+                <h2>Sản phẩm</h2>
+                <button class="btn-primary" onclick="openProductModal()">Thêm sản phẩm</button>
+                <div id="productsList" class="item-list" style="margin-top: var(--spacing-lg);"></div>
+            </div>
+
+            <div class="form-section">
+                <h2>Khuyến mại</h2>
+                <button class="btn-primary" onclick="openPromotionModal()">Thêm khuyến mại</button>
+                <div id="promotionsList" class="item-list" style="margin-top: var(--spacing-lg);"></div>
+            </div>
+        </div>
+
+        <!-- Export/Import Tab -->
+        <div class="admin-content" id="export-tab">
+            <div class="data-section">
+                <h3>Dữ liệu liên hệ (contact.json)</h3>
+                <div class="json-display"><code id="contactJsonDisplay"></code></div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="downloadJSON('contact')">Tải xuống contact.json</button>
+                    <button class="btn-secondary" onclick="copyToClipboard('contactJsonDisplay')">Sao chép</button>
+                </div>
+            </div>
+
+            <div class="data-section">
+                <h3>Dữ liệu bán hàng (sale.json)</h3>
+                <div class="json-display"><code id="saleJsonDisplay"></code></div>
+                <div class="button-group">
+                    <button class="btn-primary" onclick="downloadJSON('sale')">Tải xuống sale.json</button>
+                    <button class="btn-secondary" onclick="copyToClipboard('saleJsonDisplay')">Sao chép</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="productModalTitle">Thêm sản phẩm</h2>
+                <button class="close-btn" onclick="closeProductModal()">&times;</button>
+            </div>
+            <form id="productForm">
+                <div class="form-group">
+                    <label>Tên sản phẩm</label>
+                    <input type="text" id="productName" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Giá (VNĐ)</label>
+                        <input type="number" id="productPrice" required min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Hình ảnh</label>
+                        <input type="text" id="productImage" placeholder="tên file">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <textarea id="productDescription"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-primary" onclick="saveProduct()">Lưu</button>
+                    <button type="button" class="btn-secondary" onclick="closeProductModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Promotion Modal -->
+    <div class="modal" id="promotionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="promotionModalTitle">Thêm khuyến mại</h2>
+                <button class="close-btn" onclick="closePromotionModal()">&times;</button>
+            </div>
+            <form id="promotionForm">
+                <div class="form-group">
+                    <label>Tiêu đề</label>
+                    <input type="text" id="promotionTitle" required>
+                </div>
+                <div class="form-group">
+                    <label>Mô tả</label>
+                    <textarea id="promotionDescription"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Giảm giá (%)</label>
+                        <input type="number" id="promotionDiscount" required min="0" max="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Hạn sử dụng</label>
+                        <input type="date" id="promotionValidUntil" required>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-primary" onclick="savePromotion()">Lưu</button>
+                    <button type="button" class="btn-secondary" onclick="closePromotionModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let contactData = {};
+        let saleData = {};
+        let editingProductIndex = null;
+        let editingPromotionIndex = null;
+
+        // Initialize
+        async function init() {
+            await loadData();
+            renderContactSections();
+            renderProducts();
+            renderPromotions();
+            displayJSON();
+        }
+
+        async function loadData() {
+            try {
+                const [contactRes, saleRes] = await Promise.all([
+                    fetch('../data/contact.json'),
+                    fetch('../data/sale.json')
+                ]);
+
+                if (contactRes.ok) contactData = await contactRes.json();
+                if (saleRes.ok) saleData = await saleRes.json();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showStatus('Lỗi khi tải dữ liệu', 'error');
+            }
+        }
+
+        // Tab Navigation
+        document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabName = btn.dataset.tab;
+                document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.admin-content').forEach(c => c.classList.remove('active'));
+                btn.classList.add('active');
+                document.getElementById(tabName + '-tab').classList.add('active');
+
+                if (tabName === 'export') {
+                    displayJSON();
+                }
+            });
+        });
+
+        // Contact Section Rendering
+        function renderContactSections() {
+            const container = document.getElementById('contactSections');
+            container.innerHTML = '';
+
+            Object.keys(contactData).forEach(sectionKey => {
+                const section = contactData[sectionKey];
+                const sectionDiv = document.createElement('div');
+                sectionDiv.style.marginBottom = 'var(--spacing-xl)';
+
+                const sectionTitle = document.createElement('h3');
+                sectionTitle.textContent = section.title;
+                sectionDiv.appendChild(sectionTitle);
+
+                const itemsContainer = document.createElement('div');
+                itemsContainer.style.marginBottom = 'var(--spacing-lg)';
+
+                section.items.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item-card';
+                    itemDiv.innerHTML = `
+                        <div class="item-info">
+                            <h3 style="margin-bottom: var(--spacing-sm);">${item.name}</h3>
+                            <p><strong>Điện thoại:</strong> ${item.phone}</p>
+                            <p><strong>Zalo:</strong> <a href="${item.href}" target="_blank">${item.phone}</a></p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn-primary" onclick="editContactItem('${sectionKey}', ${index})">Sửa</button>
+                            <button class="btn-danger" onclick="deleteContactItem('${sectionKey}', ${index})">Xóa</button>
+                        </div>
+                    `;
+                    itemsContainer.appendChild(itemDiv);
+                });
+
+                sectionDiv.appendChild(itemsContainer);
+
+                const addBtn = document.createElement('button');
+                addBtn.className = 'btn-primary';
+                addBtn.textContent = 'Thêm người';
+                addBtn.onclick = () => editContactItem(sectionKey, null);
+                sectionDiv.appendChild(addBtn);
+
+                container.appendChild(sectionDiv);
+            });
+        }
+
+        function editContactItem(sectionKey, itemIndex) {
+            const name = prompt('Tên:');
+            if (name === null) return;
+
+            const phone = prompt('Điện thoại:');
+            if (phone === null) return;
+
+            const item = { name, phone, href: `https://zalo.me/${phone.replace(/\s+/g, '')}` };
+
+            if (itemIndex !== null) {
+                contactData[sectionKey].items[itemIndex] = item;
+            } else {
+                contactData[sectionKey].items.push(item);
+            }
+
+            saveContactData();
+            renderContactSections();
+        }
+
+        function deleteContactItem(sectionKey, itemIndex) {
+            if (confirm('Xóa mục này?')) {
+                contactData[sectionKey].items.splice(itemIndex, 1);
+                saveContactData();
+                renderContactSections();
+            }
+        }
+
+        async function saveContactData() {
+            try {
+                // In a real scenario, you'd send this to a backend API
+                // For now, we'll just update the local data and show a message
+                console.log('Contact data saved:', contactData);
+                showStatus('Dữ liệu liên hệ đã được cập nhật (vui lòng tải xuống để lưu vào file)', 'success');
+            } catch (error) {
+                showStatus('Lỗi khi lưu dữ liệu', 'error');
+            }
+        }
+
+        // Product Functions
+        function renderProducts() {
+            const container = document.getElementById('productsList');
+            if (!saleData.products) {
+                saleData.products = [];
+            }
+
+            container.innerHTML = '';
+            saleData.products.forEach((product, index) => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-info">
+                        <h3 style="margin-bottom: var(--spacing-sm);">${product.name}</h3>
+                        <p><strong>Giá:</strong> ${product.price?.toLocaleString('vi-VN')} VNĐ</p>
+                        <p style="color: var(--color-text-light);">${product.description}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-primary" onclick="editProduct(${index})">Sửa</button>
+                        <button class="btn-danger" onclick="deleteProduct(${index})">Xóa</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openProductModal() {
+            editingProductIndex = null;
+            document.getElementById('productModalTitle').textContent = 'Thêm sản phẩm';
+            document.getElementById('productForm').reset();
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function editProduct(index) {
+            editingProductIndex = index;
+            const product = saleData.products[index];
+            document.getElementById('productModalTitle').textContent = 'Sửa sản phẩm';
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productImage').value = product.image || '';
+            document.getElementById('productDescription').value = product.description || '';
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+            editingProductIndex = null;
+        }
+
+        function saveProduct() {
+            const product = {
+                id: editingProductIndex !== null ? saleData.products[editingProductIndex].id : Date.now(),
+                name: document.getElementById('productName').value,
+                price: parseInt(document.getElementById('productPrice').value),
+                image: document.getElementById('productImage').value,
+                description: document.getElementById('productDescription').value
+            };
+
+            if (editingProductIndex !== null) {
+                saleData.products[editingProductIndex] = product;
+            } else {
+                saleData.products.push(product);
+            }
+
+            saveSaleData();
+            renderProducts();
+            closeProductModal();
+        }
+
+        function deleteProduct(index) {
+            if (confirm('Xóa sản phẩm này?')) {
+                saleData.products.splice(index, 1);
+                saveSaleData();
+                renderProducts();
+            }
+        }
+
+        // Promotion Functions
+        function renderPromotions() {
+            const container = document.getElementById('promotionsList');
+            if (!saleData.promotions) {
+                saleData.promotions = [];
+            }
+
+            container.innerHTML = '';
+            saleData.promotions.forEach((promotion, index) => {
+                const card = document.createElement('div');
+                card.className = 'item-card';
+                card.innerHTML = `
+                    <div class="item-info">
+                        <h3 style="margin-bottom: var(--spacing-sm);">${promotion.title}</h3>
+                        <p style="color: var(--color-text-light);">${promotion.description}</p>
+                        <p><strong>Giảm:</strong> ${promotion.discount}% | <strong>Hạn:</strong> ${promotion.validUntil}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-primary" onclick="editPromotion(${index})">Sửa</button>
+                        <button class="btn-danger" onclick="deletePromotion(${index})">Xóa</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function openPromotionModal() {
+            editingPromotionIndex = null;
+            document.getElementById('promotionModalTitle').textContent = 'Thêm khuyến mại';
+            document.getElementById('promotionForm').reset();
+            document.getElementById('promotionModal').classList.add('active');
+        }
+
+        function editPromotion(index) {
+            editingPromotionIndex = index;
+            const promo = saleData.promotions[index];
+            document.getElementById('promotionModalTitle').textContent = 'Sửa khuyến mại';
+            document.getElementById('promotionTitle').value = promo.title;
+            document.getElementById('promotionDescription').value = promo.description || '';
+            document.getElementById('promotionDiscount').value = promo.discount;
+            document.getElementById('promotionValidUntil').value = promo.validUntil;
+            document.getElementById('promotionModal').classList.add('active');
+        }
+
+        function closePromotionModal() {
+            document.getElementById('promotionModal').classList.remove('active');
+            editingPromotionIndex = null;
+        }
+
+        function savePromotion() {
+            const promotion = {
+                id: editingPromotionIndex !== null ? saleData.promotions[editingPromotionIndex].id : Date.now(),
+                title: document.getElementById('promotionTitle').value,
+                description: document.getElementById('promotionDescription').value,
+                discount: parseInt(document.getElementById('promotionDiscount').value),
+                validUntil: document.getElementById('promotionValidUntil').value
+            };
+
+            if (editingPromotionIndex !== null) {
+                saleData.promotions[editingPromotionIndex] = promotion;
+            } else {
+                saleData.promotions.push(promotion);
+            }
+
+            saveSaleData();
+            renderPromotions();
+            closePromotionModal();
+        }
+
+        function deletePromotion(index) {
+            if (confirm('Xóa khuyến mại này?')) {
+                saleData.promotions.splice(index, 1);
+                saveSaleData();
+                renderPromotions();
+            }
+        }
+
+        async function saveSaleData() {
+            try {
+                console.log('Sale data saved:', saleData);
+                showStatus('Dữ liệu bán hàng đã được cập nhật (vui lòng tải xuống để lưu vào file)', 'success');
+                displayJSON();
+            } catch (error) {
+                showStatus('Lỗi khi lưu dữ liệu', 'error');
+            }
+        }
+
+        // Display JSON
+        function displayJSON() {
+            document.getElementById('contactJsonDisplay').textContent = JSON.stringify(contactData, null, 2);
+            document.getElementById('saleJsonDisplay').textContent = JSON.stringify(saleData, null, 2);
+        }
+
+        // Utilities
+        function downloadJSON(type) {
+            const data = type === 'contact' ? contactData : saleData;
+            const jsonString = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = type + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showStatus('Đã sao chép vào clipboard', 'success');
+            }).catch(() => {
+                showStatus('Lỗi khi sao chép', 'error');
+            });
+        }
+
+        function showStatus(message, type) {
+            const element = document.getElementById('statusMessage');
+            element.textContent = message;
+            element.className = 'status-message active ' + type;
+            setTimeout(() => {
+                element.classList.remove('active');
+            }, 3000);
+        }
+
+        // Close modals on background click
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('productModal')) {
+                closeProductModal();
+            }
+        });
+
+        document.getElementById('promotionModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('promotionModal')) {
+                closePromotionModal();
+            }
+        });
+
+        // Initialize on load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
