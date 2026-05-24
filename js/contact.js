@@ -18,23 +18,23 @@ function renderContactSection(data) {
   container.innerHTML = `
     <div class="contact-grid">
       <div class="contact-card">
-        <h3>${data.sales.title}</h3>
+        <h3>👩‍💼 ${data.sales.title}</h3>
         ${renderContactItems(data.sales.items)}
       </div>
       <div class="contact-card">
-        <h3>${data.dayDelivery.title}</h3>
+        <h3>🚚 ${data.dayDelivery.title}</h3>
         ${renderContactItems(data.dayDelivery.items)}
       </div>
       <div class="contact-card">
-        <h3>${data.nightDelivery.title}</h3>
+        <h3>⏰ ${data.nightDelivery.title}</h3>
         ${renderContactItems(data.nightDelivery.items)}
       </div>
     </div>
     <div class="contact-footer-info">
-      <strong>${data.manager.title}</strong>
+      <strong>🍀 ${data.manager.title}</strong>
       ${renderContactItems(data.manager.items)}
-      <strong>${data.manager.subtitle}</strong>
-      <p style="margin-top: var(--spacing-md);">${data.manager.note}</p>
+      <strong>Xin cảm ơn quý khách hàng!!!</strong>
+      <p style="margin-top: var(--spacing-md);">Nhận thương lượng trao đổi về số lượng lớn và chịu trách nhiệm pháp lý</p>
     </div>
   `;
 }

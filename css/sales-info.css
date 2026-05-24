@@ -34,7 +34,6 @@
   line-height: var(--line-height-relaxed);
   font-size: var(--font-size-sm);
   color: var(--color-text);
-  white-space: pre-wrap;
   word-break: break-word;
 }
 

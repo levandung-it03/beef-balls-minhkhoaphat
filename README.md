@@ -142,3 +142,161 @@ documents: {
 ## License
 
 © 2024 NHÀ BÒ VIÊN. All rights reserved.
+
+```sql
+DROP TABLE IF EXISTS sale_delivery;
+DROP TABLE IF EXISTS sale_price;
+DROP TABLE IF EXISTS contact_item;
+DROP TABLE IF EXISTS contact_types;
+
+CREATE TABLE sale_delivery (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    place TEXT NOT NULL CHECK(place IN ('HCM', 'OTHERS')),
+    value NVARCHAR(50) NOT NULL
+);
+
+CREATE TABLE sale_price (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name NVARCHAR(40) NOT NULL,
+    unit NVARCHAR(5),
+    price NVARCHAR(20),
+    note NVARCHAR(50)
+);
+
+CREATE TABLE contact_types (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    code NVARCHAR(50),
+    title NVARCHAR(50) NOT NULL
+);
+
+CREATE TABLE contact_item (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    types_id BIGINT NOT NULL,
+    name NVARCHAR(40) NOT NULL,
+    phone NVARCHAR(20),
+
+    CONSTRAINT fk_contact_item_types
+        FOREIGN KEY (types_id)
+        REFERENCES contact_types(id)
+);
+```
+
+```sql
+-- =========================
+-- INSERT CONTACT TYPES
+-- =========================
+
+INSERT INTO contact_types(id, code, title)
+VALUES
+    (1, 'sales', 'Quản lý bán hàng'),
+    (2, 'day_delivery', 'Giao hàng ca sáng & tỉnh'),
+    (3, 'night_delivery', 'Xử lý giao hàng ca chiều'),
+    (4, 'manager', 'Khiếu nại & Tương thương');
+
+
+-- =========================
+-- INSERT CONTACT ITEMS
+-- =========================
+
+INSERT INTO contact_item(id, types_id, name, phone)
+VALUES
+(
+  	1,
+    (SELECT id FROM contact_types WHERE code = 'sales'),
+    'Chi Huệ',
+    '082 5689824'
+),
+
+(
+  	2,
+    (SELECT id FROM contact_types WHERE code = 'day_delivery'),
+    'Anh Đến',
+    '090 9681659'
+),
+
+(
+  	3,
+    (SELECT id FROM contact_types WHERE code = 'day_delivery'),
+    'Quốc Việt',
+    '086 5078892'
+),
+
+(
+  	4,
+    (SELECT id FROM contact_types WHERE code = 'night_delivery'),
+    'Anh Khoa',
+    '+84 90 9269441'
+),
+
+(
+  	5,
+    (SELECT id FROM contact_types WHERE code = 'night_delivery'),
+    'Anh Thiên',
+    '090 2339633'
+),
+
+(
+  	6,
+    (SELECT id FROM contact_types WHERE code = 'night_delivery'),
+    'Anh Vượng',
+    '+84 90 9094995'
+),
+
+(
+  	7,
+    (SELECT id FROM contact_types WHERE code = 'manager'),
+    'Chị Nga',
+    '090 2047479'
+);
+-- =========================
+-- INSERT DELIVERY RULES
+-- =========================
+
+INSERT INTO sale_delivery(id, place, value)
+VALUES
+    (1, 'HCM', 'Nhận đơn trước 12h trưa mỗi ngày'),
+    (2, 'HCM', 'Đơn sau 12h rời qua ngày mai'),
+    (3, 'HCM', 'Giao đơn 2-5h chiều mỗi ngày'),
+
+    (4, 'OTHERS', 'Nhận trước 1 ngày'),
+    (5, 'OTHERS', 'Cọc 200k làm tin'),
+    (6, 'OTHERS', 'Ra chành gửi biên nhận thanh toán hết mới thả hàng');
+
+-- =========================
+-- INSERT PRICE LIST
+-- =========================
+
+INSERT INTO sale_price(id, name, unit, price, note)
+VALUES
+    (
+  			1,
+        'Bò viên thường',
+        '1kg',
+        45000,
+        'Bò viên cơ bản'
+    ),
+
+    (
+  			2,
+        'Bò viên gân',
+        '1kg',
+        45000,
+        'Bò viên có vừa gân bò'
+    ),
+
+    (
+  			3,
+        'Bò viên siêu gân',
+        '1kg',
+        45000,
+        'Bò viên có nhiều gân bò'
+    ),
+
+    (
+  			4,
+        'Gân bò & trâu',
+        '1kg',
+        45000,
+        'Hỗn hợp gân bò & trâu đã làm sạch'
+    );
+```

@@ -1,16 +1,41 @@
-const defaultPricingData = [
-  { name: 'Bò viên thường', unit: '1kg', price: '45.000đ', note: 'Bò viên cơ bản' },
-  { name: 'Bò viên gân', unit: '1kg', price: '55.000đ', note: 'Có chứa gân bò' },
-  { name: 'Bò viên siêu gân', unit: '1kg', price: '65.000đ', note: 'Gân nhiều, chất lượng cao' },
-  { name: 'Gân trâu sạch', unit: '1kg', price: '75.000đ', note: 'Gân trâu tươi sạch' },
-  { name: 'Gân bò sạch', unit: '1kg', price: '70.000đ', note: 'Gân bò tươi sạch' }
-];
+const SALE_DATA_URL = './data/sale.json';
+const SELECTORS = {
+  deliveryInfo: 'deliveryInfo',
+  pricingContainer: 'pricingTableContainer'
+};
+
+function getElement(id) {
+  return document.getElementById(id);
+}
+
+function formatPrice(value) {
+  if (typeof value === 'number') {
+    return new Intl.NumberFormat('vi-VN').format(value) + 'đ';
+  }
+
+  if (typeof value === 'string') {
+    const normalized = value.replace(/\D/g, '');
+    if (!normalized) return value;
+    return new Intl.NumberFormat('vi-VN').format(Number(normalized)) + 'đ';
+  }
+
+  return '';
+}
 
 function renderPricingTable(data) {
-  const pricingContainer = document.getElementById('pricingTableContainer');
+  const pricingContainer = getElement(SELECTORS.pricingContainer);
   if (!pricingContainer) return;
 
-  let tableHTML = `
+  const rows = (Array.isArray(data) ? data : []).map(item => `
+      <tr>
+        <td>${item.name || ''}</td>
+        <td>${item.unit || ''}</td>
+        <td class="price">${formatPrice(item.price)}</td>
+        <td>${item.note || ''}</td>
+      </tr>
+    `).join('');
+
+  pricingContainer.innerHTML = `
     <table class="pricing-table">
       <thead>
         <tr>
@@ -21,42 +46,60 @@ function renderPricingTable(data) {
         </tr>
       </thead>
       <tbody>
-  `;
-
-  data.forEach(item => {
-    tableHTML += `
-      <tr>
-        <td>${item.name}</td>
-        <td>${item.unit}</td>
-        <td class="price">${item.price}</td>
-        <td>${item.note}</td>
-      </tr>
-    `;
-  });
-
-  tableHTML += `
+        ${rows}
       </tbody>
     </table>
   `;
-
-  pricingContainer.innerHTML = tableHTML;
 }
 
-async function loadPricingData() {
-  const pricingContainer = document.getElementById('pricingTableContainer');
-  if (!pricingContainer) return;
+function renderDeliveryInfo(delivery) {
+  const deliveryInfo = getElement(SELECTORS.deliveryInfo);
+  if (!deliveryInfo) return;
 
+  const safeArray = (value) => Array.isArray(value) ? value : [];
+  const renderList = (title, items) => `
+    <div class="delivery-item">
+      <strong>${title}</strong>
+      <ul>
+        ${safeArray(items).map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    </div>
+  `;
+
+  deliveryInfo.innerHTML = `
+    ${renderList('TP HCM:', safeArray(delivery?.tphcm))}
+    ${renderList('Khách tỉnh:', safeArray(delivery?.others))}
+  `;
+}
+
+function renderError(targetId, message) {
+  const target = getElement(targetId);
+  if (!target) return;
+  target.innerHTML = `<div class="delivery-error">${message}</div>`;
+}
+
+async function fetchJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+  }
+  return response.json();
+}
+
+async function loadSaleData() {
   try {
-    if (window.FirebaseUtil && typeof window.FirebaseUtil.getPricingData === 'function') {
-      const data = await window.FirebaseUtil.getPricingData();
-      renderPricingTable(data.length > 0 ? data : defaultPricingData);
-    } else {
-      renderPricingTable(defaultPricingData);
-    }
+    return await fetchJson(SALE_DATA_URL);
   } catch (error) {
-    console.error(error);
-    renderPricingTable(defaultPricingData);
+    console.error('loadSaleData:', error);
+    return {};
   }
 }
 
-document.addEventListener('partialsLoaded', loadPricingData);
+async function initSalesInfo() {
+  const saleData = await loadSaleData();
+
+  renderDeliveryInfo(saleData.delivery);
+  renderPricingTable(saleData.price);
+}
+
+document.addEventListener('partialsLoaded', initSalesInfo);

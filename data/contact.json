@@ -1,6 +1,6 @@
 {
   "sales": {
-    "title": "👩‍💼 Quản lý bán hàng",
+    "title": "Quản lý bán hàng",
     "items": [
       {
         "name": "Chi Huệ",
@@ -10,7 +10,7 @@
     ]
   },
   "dayDelivery": {
-    "title": "🚚 Giao hàng ca sáng & tỉnh",
+    "title": "Giao hàng ca sáng & tỉnh",
     "items": [
       {
         "name": "Anh Đến",
@@ -25,7 +25,7 @@
     ]
   },
   "nightDelivery": {
-    "title": "⏰ Xử lý giao hàng ca chiều",
+    "title": "Xử lý giao hàng ca chiều",
     "items": [
       {
         "name": "Anh Khoa",
@@ -45,15 +45,13 @@
     ]
   },
   "manager": {
-    "title": "🍀 Khiếu nại & Tương thương",
+    "title": "Khiếu nại & Tương thương",
     "items": [
       {
         "name": "Chị Nga",
         "phone": "090 2047479",
         "href": "https://zalo.me/0902047479"
       }
-    ],
-    "subtitle": "Xin cảm ơn quý khách hàng!!!",
-    "note": "Nhận thương lượng trao đổi về số lượng lớn và chịu trách nhiệm pháp lý"
+    ]
   }
 }
