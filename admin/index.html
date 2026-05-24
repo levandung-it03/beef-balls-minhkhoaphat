@@ -33,6 +33,7 @@
             gap: var(--spacing-md);
             margin-bottom: var(--spacing-2xl);
             border-bottom: 1px solid var(--color-border);
+            flex-wrap: wrap;
         }
 
         .admin-tab-btn {
@@ -102,6 +103,7 @@
             color: var(--color-text);
             background-color: var(--color-bg);
             transition: border-color var(--transition-fast);
+            box-sizing: border-box;
         }
 
         .form-group textarea {
@@ -131,10 +133,25 @@
             flex-wrap: wrap;
         }
 
+        .btn-primary,
+        .btn-secondary,
+        .btn-danger,
+        .btn-success {
+            border: 1px solid var(--color-border);
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: all var(--transition-fast);
+        }
+
         .btn-primary {
             background-color: var(--color-primary);
             color: white;
-            padding: var(--spacing-md) var(--spacing-lg);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
         }
 
         .btn-secondary {
@@ -143,9 +160,14 @@
             border: 1px solid var(--color-border);
         }
 
+        .btn-secondary:hover {
+            background-color: var(--color-border);
+        }
+
         .btn-danger {
             background-color: #D9534F;
             color: white;
+            border: none;
         }
 
         .btn-danger:hover {
@@ -155,6 +177,7 @@
         .btn-success {
             background-color: var(--color-accent);
             color: white;
+            border: none;
         }
 
         .btn-success:hover {
@@ -293,33 +316,31 @@
             }
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .admin-container {
-                padding: var(--spacing-md);
-            }
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-            .form-row {
-                grid-template-columns: 1fr;
-            }
+        table thead tr {
+            background-color: var(--color-bg-tertiary);
+            border-bottom: 2px solid var(--color-border);
+        }
 
-            .item-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        table th {
+            padding: var(--spacing-md);
+            text-align: left;
+            font-weight: 600;
+            color: var(--color-text);
+        }
 
-            .item-actions {
-                width: 100%;
-                margin-top: var(--spacing-md);
-            }
+        table td {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--color-border);
+        }
 
-            .button-group {
-                flex-direction: column;
-            }
-
-            .button-group button {
-                width: 100%;
-            }
+        table tbody tr:hover {
+            background-color: var(--color-bg-secondary);
         }
 
         /* Data Export/Import */
@@ -350,6 +371,40 @@
         .json-display code {
             color: var(--color-text);
         }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: var(--spacing-md);
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .item-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-actions {
+                width: 100%;
+                margin-top: var(--spacing-md);
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .button-group button {
+                width: 100%;
+            }
+
+            table th, table td {
+                padding: var(--spacing-sm);
+                font-size: var(--font-size-sm);
+            }
+        }
     </style>
 </head>
 <body>
@@ -364,6 +419,7 @@
         <div class="admin-tabs">
             <button class="admin-tab-btn active" data-tab="contact">Quản lý liên hệ</button>
             <button class="admin-tab-btn" data-tab="price">Quản lý giá</button>
+            <button class="admin-tab-btn" data-tab="delivery">Quản lý giao hàng</button>
             <button class="admin-tab-btn" data-tab="export">Xuất/Nhập dữ liệu</button>
         </div>
 
@@ -378,8 +434,54 @@
         <!-- Price Management Tab -->
         <div class="admin-content" id="price-tab">
             <div class="form-section">
-                <h2>Quản lý giá sản phẩm</h2>
-                <div id="priceList" class="item-list"></div>
+                <h2>Quản lý giá</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tên sản phẩm</th>
+                            <th>Giá (VNĐ)</th>
+                            <th style="text-align: center; width: 200px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priceTable">
+                    </tbody>
+                </table>
+                <button class="btn-primary" style="margin-top: var(--spacing-lg);" onclick="openPriceModal()">+ Thêm giá</button>
+            </div>
+        </div>
+
+        <!-- Delivery Management Tab -->
+        <div class="admin-content" id="delivery-tab">
+            <div class="form-section">
+                <h2>Quản lý giao hàng - TP HCM</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Quận</th>
+                            <th>Phí (VNĐ)</th>
+                            <th style="text-align: center; width: 200px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deliveryTphcmTable">
+                    </tbody>
+                </table>
+                <button class="btn-primary" style="margin-top: var(--spacing-lg);" onclick="openDeliveryModal('tphcm')">+ Thêm Quận</button>
+            </div>
+
+            <div class="form-section" style="margin-top: var(--spacing-xl);">
+                <h2>Quản lý giao hàng - Các tỉnh khác</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tỉnh/Thành phố</th>
+                            <th>Phí (VNĐ)</th>
+                            <th style="text-align: center; width: 200px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deliveryOthersTable">
+                    </tbody>
+                </table>
+                <button class="btn-primary" style="margin-top: var(--spacing-lg);" onclick="openDeliveryModal('others')">+ Thêm Tỉnh</button>
             </div>
         </div>
 
@@ -405,17 +507,17 @@
         </div>
     </div>
 
-    <!-- Product Modal -->
+    <!-- Price Modal -->
     <div class="modal" id="priceModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="priceModalTitle">Cập nhật giá</h2>
+                <h2 id="priceModalTitle">Thêm giá</h2>
                 <button class="close-btn" onclick="closePriceModal()">&times;</button>
             </div>
             <form id="priceForm">
                 <div class="form-group">
                     <label>Tên sản phẩm</label>
-                    <input type="text" id="priceName" disabled>
+                    <input type="text" id="priceName" required>
                 </div>
                 <div class="form-group">
                     <label>Giá (VNĐ)</label>
@@ -429,18 +531,43 @@
         </div>
     </div>
 
+    <!-- Delivery Modal -->
+    <div class="modal" id="deliveryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="deliveryModalTitle">Thêm khu vực giao hàng</h2>
+                <button class="close-btn" onclick="closeDeliveryModal()">&times;</button>
+            </div>
+            <form id="deliveryForm">
+                <div class="form-group">
+                    <label id="deliveryLocationLabel">Quận</label>
+                    <input type="text" id="deliveryLocation" required>
+                </div>
+                <div class="form-group">
+                    <label>Phí giao hàng (VNĐ)</label>
+                    <input type="number" id="deliveryFee" required min="0">
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-primary" onclick="saveDelivery()">Lưu</button>
+                    <button type="button" class="btn-secondary" onclick="closeDeliveryModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         let contactData = {};
         let saleData = {};
-        let editingProductIndex = null;
-        let editingPromotionIndex = null;
+        let editingPriceIndex = null;
+        let editingDeliveryIndex = null;
+        let currentDeliveryType = null;
 
         // Initialize
         async function init() {
             await loadData();
             renderContactSections();
-            renderProducts();
-            renderPromotions();
+            renderPrices();
+            renderDeliveries();
             displayJSON();
         }
 
@@ -549,8 +676,6 @@
 
         async function saveContactData() {
             try {
-                // In a real scenario, you'd send this to a backend API
-                // For now, we'll just update the local data and show a message
                 console.log('Contact data saved:', contactData);
                 showStatus('Dữ liệu liên hệ đã được cập nhật (vui lòng tải xuống để lưu vào file)', 'success');
             } catch (error) {
@@ -558,157 +683,179 @@
             }
         }
 
-        // Product Functions
-        function renderProducts() {
-            const container = document.getElementById('productsList');
-            if (!saleData.products) {
-                saleData.products = [];
+        // Price Functions
+        function renderPrices() {
+            const container = document.getElementById('priceTable');
+            if (!saleData.price) {
+                saleData.price = [];
             }
 
             container.innerHTML = '';
-            saleData.products.forEach((product, index) => {
-                const card = document.createElement('div');
-                card.className = 'item-card';
-                card.innerHTML = `
-                    <div class="item-info">
-                        <h3 style="margin-bottom: var(--spacing-sm);">${product.name}</h3>
-                        <p><strong>Giá:</strong> ${product.price?.toLocaleString('vi-VN')} VNĐ</p>
-                        <p style="color: var(--color-text-light);">${product.description}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-primary" onclick="editProduct(${index})">Sửa</button>
-                        <button class="btn-danger" onclick="deleteProduct(${index})">Xóa</button>
-                    </div>
+            saleData.price.forEach((price, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${price.name}</td>
+                    <td>${price.value.toLocaleString('vi-VN')}</td>
+                    <td style="text-align: center;">
+                        <button class="btn-primary" style="padding: var(--spacing-sm) var(--spacing-md);" onclick="editPrice(${index})">Sửa</button>
+                        <button class="btn-danger" style="padding: var(--spacing-sm) var(--spacing-md);" onclick="deletePrice(${index})">Xóa</button>
+                    </td>
                 `;
-                container.appendChild(card);
+                container.appendChild(row);
             });
         }
 
-        function openProductModal() {
-            editingProductIndex = null;
-            document.getElementById('productModalTitle').textContent = 'Thêm sản phẩm';
-            document.getElementById('productForm').reset();
-            document.getElementById('productModal').classList.add('active');
+        function openPriceModal() {
+            editingPriceIndex = null;
+            document.getElementById('priceModalTitle').textContent = 'Thêm giá';
+            document.getElementById('priceForm').reset();
+            document.getElementById('priceName').removeAttribute('disabled');
+            document.getElementById('priceModal').classList.add('active');
         }
 
-        function editProduct(index) {
-            editingProductIndex = index;
-            const product = saleData.products[index];
-            document.getElementById('productModalTitle').textContent = 'Sửa sản phẩm';
-            document.getElementById('productName').value = product.name;
-            document.getElementById('productPrice').value = product.price;
-            document.getElementById('productImage').value = product.image || '';
-            document.getElementById('productDescription').value = product.description || '';
-            document.getElementById('productModal').classList.add('active');
+        function editPrice(index) {
+            editingPriceIndex = index;
+            const price = saleData.price[index];
+            document.getElementById('priceModalTitle').textContent = 'Sửa giá';
+            document.getElementById('priceName').value = price.name;
+            document.getElementById('priceName').setAttribute('disabled', 'disabled');
+            document.getElementById('priceValue').value = price.value;
+            document.getElementById('priceModal').classList.add('active');
         }
 
-        function closeProductModal() {
-            document.getElementById('productModal').classList.remove('active');
-            editingProductIndex = null;
+        function closePriceModal() {
+            document.getElementById('priceModal').classList.remove('active');
+            editingPriceIndex = null;
         }
 
-        function saveProduct() {
-            const product = {
-                id: editingProductIndex !== null ? saleData.products[editingProductIndex].id : Date.now(),
-                name: document.getElementById('productName').value,
-                price: parseInt(document.getElementById('productPrice').value),
-                image: document.getElementById('productImage').value,
-                description: document.getElementById('productDescription').value
+        function savePrice() {
+            if (!document.getElementById('priceName').value || !document.getElementById('priceValue').value) {
+                showStatus('Vui lòng điền đầy đủ thông tin', 'error');
+                return;
+            }
+
+            const price = {
+                id: editingPriceIndex !== null ? saleData.price[editingPriceIndex].id : Date.now(),
+                name: document.getElementById('priceName').value,
+                value: parseInt(document.getElementById('priceValue').value)
             };
 
-            if (editingProductIndex !== null) {
-                saleData.products[editingProductIndex] = product;
+            if (editingPriceIndex !== null) {
+                saleData.price[editingPriceIndex] = price;
             } else {
-                saleData.products.push(product);
+                saleData.price.push(price);
             }
 
             saveSaleData();
-            renderProducts();
-            closeProductModal();
+            renderPrices();
+            closePriceModal();
         }
 
-        function deleteProduct(index) {
-            if (confirm('Xóa sản phẩm này?')) {
-                saleData.products.splice(index, 1);
+        function deletePrice(index) {
+            if (confirm('Xóa giá này?')) {
+                saleData.price.splice(index, 1);
                 saveSaleData();
-                renderProducts();
+                renderPrices();
             }
         }
 
-        // Promotion Functions
-        function renderPromotions() {
-            const container = document.getElementById('promotionsList');
-            if (!saleData.promotions) {
-                saleData.promotions = [];
+        // Delivery Functions
+        function renderDeliveries() {
+            renderDeliveryTable('tphcm');
+            renderDeliveryTable('others');
+        }
+
+        function renderDeliveryTable(type) {
+            const containerId = type === 'tphcm' ? 'deliveryTphcmTable' : 'deliveryOthersTable';
+            const container = document.getElementById(containerId);
+            
+            if (!saleData.delivery) {
+                saleData.delivery = { tphcm: [], others: [] };
+            }
+            if (!saleData.delivery[type]) {
+                saleData.delivery[type] = [];
             }
 
             container.innerHTML = '';
-            saleData.promotions.forEach((promotion, index) => {
-                const card = document.createElement('div');
-                card.className = 'item-card';
-                card.innerHTML = `
-                    <div class="item-info">
-                        <h3 style="margin-bottom: var(--spacing-sm);">${promotion.title}</h3>
-                        <p style="color: var(--color-text-light);">${promotion.description}</p>
-                        <p><strong>Giảm:</strong> ${promotion.discount}% | <strong>Hạn:</strong> ${promotion.validUntil}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="btn-primary" onclick="editPromotion(${index})">Sửa</button>
-                        <button class="btn-danger" onclick="deletePromotion(${index})">Xóa</button>
-                    </div>
+            const locationKey = type === 'tphcm' ? 'district' : 'province';
+            
+            saleData.delivery[type].forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item[locationKey]}</td>
+                    <td>${item.fee.toLocaleString('vi-VN')}</td>
+                    <td style="text-align: center;">
+                        <button class="btn-primary" style="padding: var(--spacing-sm) var(--spacing-md);" onclick="editDelivery('${type}', ${index})">Sửa</button>
+                        <button class="btn-danger" style="padding: var(--spacing-sm) var(--spacing-md);" onclick="deleteDelivery('${type}', ${index})">Xóa</button>
+                    </td>
                 `;
-                container.appendChild(card);
+                container.appendChild(row);
             });
         }
 
-        function openPromotionModal() {
-            editingPromotionIndex = null;
-            document.getElementById('promotionModalTitle').textContent = 'Thêm khuyến mại';
-            document.getElementById('promotionForm').reset();
-            document.getElementById('promotionModal').classList.add('active');
+        function openDeliveryModal(type) {
+            currentDeliveryType = type;
+            editingDeliveryIndex = null;
+            const label = type === 'tphcm' ? 'Quận' : 'Tỉnh/Thành phố';
+            document.getElementById('deliveryLocationLabel').textContent = label;
+            document.getElementById('deliveryModalTitle').textContent = `Thêm ${label}`;
+            document.getElementById('deliveryForm').reset();
+            document.getElementById('deliveryLocation').removeAttribute('disabled');
+            document.getElementById('deliveryModal').classList.add('active');
         }
 
-        function editPromotion(index) {
-            editingPromotionIndex = index;
-            const promo = saleData.promotions[index];
-            document.getElementById('promotionModalTitle').textContent = 'Sửa khuyến mại';
-            document.getElementById('promotionTitle').value = promo.title;
-            document.getElementById('promotionDescription').value = promo.description || '';
-            document.getElementById('promotionDiscount').value = promo.discount;
-            document.getElementById('promotionValidUntil').value = promo.validUntil;
-            document.getElementById('promotionModal').classList.add('active');
+        function editDelivery(type, index) {
+            currentDeliveryType = type;
+            editingDeliveryIndex = index;
+            const item = saleData.delivery[type][index];
+            const locationKey = type === 'tphcm' ? 'district' : 'province';
+            const label = type === 'tphcm' ? 'Quận' : 'Tỉnh/Thành phố';
+            
+            document.getElementById('deliveryLocationLabel').textContent = label;
+            document.getElementById('deliveryModalTitle').textContent = `Sửa ${label}`;
+            document.getElementById('deliveryLocation').value = item[locationKey];
+            document.getElementById('deliveryLocation').setAttribute('disabled', 'disabled');
+            document.getElementById('deliveryFee').value = item.fee;
+            document.getElementById('deliveryModal').classList.add('active');
         }
 
-        function closePromotionModal() {
-            document.getElementById('promotionModal').classList.remove('active');
-            editingPromotionIndex = null;
+        function closeDeliveryModal() {
+            document.getElementById('deliveryModal').classList.remove('active');
+            editingDeliveryIndex = null;
+            currentDeliveryType = null;
         }
 
-        function savePromotion() {
-            const promotion = {
-                id: editingPromotionIndex !== null ? saleData.promotions[editingPromotionIndex].id : Date.now(),
-                title: document.getElementById('promotionTitle').value,
-                description: document.getElementById('promotionDescription').value,
-                discount: parseInt(document.getElementById('promotionDiscount').value),
-                validUntil: document.getElementById('promotionValidUntil').value
+        function saveDelivery() {
+            if (!document.getElementById('deliveryLocation').value || !document.getElementById('deliveryFee').value) {
+                showStatus('Vui lòng điền đầy đủ thông tin', 'error');
+                return;
+            }
+
+            const type = currentDeliveryType;
+            const locationKey = type === 'tphcm' ? 'district' : 'province';
+            const item = {
+                id: editingDeliveryIndex !== null ? saleData.delivery[type][editingDeliveryIndex].id : Date.now(),
+                [locationKey]: document.getElementById('deliveryLocation').value,
+                fee: parseInt(document.getElementById('deliveryFee').value)
             };
 
-            if (editingPromotionIndex !== null) {
-                saleData.promotions[editingPromotionIndex] = promotion;
+            if (editingDeliveryIndex !== null) {
+                saleData.delivery[type][editingDeliveryIndex] = item;
             } else {
-                saleData.promotions.push(promotion);
+                saleData.delivery[type].push(item);
             }
 
             saveSaleData();
-            renderPromotions();
-            closePromotionModal();
+            renderDeliveries();
+            closeDeliveryModal();
         }
 
-        function deletePromotion(index) {
-            if (confirm('Xóa khuyến mại này?')) {
-                saleData.promotions.splice(index, 1);
+        function deleteDelivery(type, index) {
+            const label = type === 'tphcm' ? 'quận' : 'tỉnh';
+            if (confirm(`Xóa ${label} này?`)) {
+                saleData.delivery[type].splice(index, 1);
                 saveSaleData();
-                renderPromotions();
+                renderDeliveries();
             }
         }
 
@@ -761,15 +908,15 @@
         }
 
         // Close modals on background click
-        document.getElementById('productModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('productModal')) {
-                closeProductModal();
+        document.getElementById('priceModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('priceModal')) {
+                closePriceModal();
             }
         });
 
-        document.getElementById('promotionModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('promotionModal')) {
-                closePromotionModal();
+        document.getElementById('deliveryModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('deliveryModal')) {
+                closeDeliveryModal();
             }
         });
 

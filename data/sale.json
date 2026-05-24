@@ -1,34 +1,45 @@
 {
-  "products": [
+  "price": [
     {
       "id": 1,
       "name": "Bò Viên Regular",
-      "price": 50000,
-      "description": "Bò viên thường ngon ngon",
-      "image": "regular-ball.jpg"
+      "value": 50000
     },
     {
       "id": 2,
       "name": "Bò Viên Gân",
-      "price": 60000,
-      "description": "Bò viên với gân trâu",
-      "image": "tendon-ball.jpg"
+      "value": 60000
     },
     {
       "id": 3,
       "name": "Bò Viên Gân Super",
-      "price": 75000,
-      "description": "Bò viên gân trâu siêu ngon",
-      "image": "super-tendon-ball.jpg"
+      "value": 75000
     }
   ],
-  "promotions": [
-    {
-      "id": 1,
-      "title": "Khuyến mại tuần này",
-      "description": "Mua 2kg giảm 10%",
-      "discount": 10,
-      "validUntil": "2024-12-31"
-    }
-  ]
+  "delivery": {
+    "tphcm": [
+      {
+        "id": 1,
+        "district": "Quận 1",
+        "fee": 15000
+      },
+      {
+        "id": 2,
+        "district": "Quận 2",
+        "fee": 20000
+      }
+    ],
+    "others": [
+      {
+        "id": 1,
+        "province": "Bình Dương",
+        "fee": 30000
+      },
+      {
+        "id": 2,
+        "province": "Đồng Nai",
+        "fee": 35000
+      }
+    ]
+  }
 }
