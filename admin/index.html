@@ -363,7 +363,7 @@
 
         <div class="admin-tabs">
             <button class="admin-tab-btn active" data-tab="contact">Quản lý liên hệ</button>
-            <button class="admin-tab-btn" data-tab="sales">Quản lý bán hàng</button>
+            <button class="admin-tab-btn" data-tab="price">Quản lý giá</button>
             <button class="admin-tab-btn" data-tab="export">Xuất/Nhập dữ liệu</button>
         </div>
 
@@ -375,18 +375,11 @@
             </div>
         </div>
 
-        <!-- Sales Management Tab -->
-        <div class="admin-content" id="sales-tab">
+        <!-- Price Management Tab -->
+        <div class="admin-content" id="price-tab">
             <div class="form-section">
-                <h2>Sản phẩm</h2>
-                <button class="btn-primary" onclick="openProductModal()">Thêm sản phẩm</button>
-                <div id="productsList" class="item-list" style="margin-top: var(--spacing-lg);"></div>
-            </div>
-
-            <div class="form-section">
-                <h2>Khuyến mại</h2>
-                <button class="btn-primary" onclick="openPromotionModal()">Thêm khuyến mại</button>
-                <div id="promotionsList" class="item-list" style="margin-top: var(--spacing-lg);"></div>
+                <h2>Quản lý giá sản phẩm</h2>
+                <div id="priceList" class="item-list"></div>
             </div>
         </div>
 
@@ -413,68 +406,24 @@
     </div>
 
     <!-- Product Modal -->
-    <div class="modal" id="productModal">
+    <div class="modal" id="priceModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="productModalTitle">Thêm sản phẩm</h2>
-                <button class="close-btn" onclick="closeProductModal()">&times;</button>
+                <h2 id="priceModalTitle">Cập nhật giá</h2>
+                <button class="close-btn" onclick="closePriceModal()">&times;</button>
             </div>
-            <form id="productForm">
+            <form id="priceForm">
                 <div class="form-group">
                     <label>Tên sản phẩm</label>
-                    <input type="text" id="productName" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Giá (VNĐ)</label>
-                        <input type="number" id="productPrice" required min="0">
-                    </div>
-                    <div class="form-group">
-                        <label>Hình ảnh</label>
-                        <input type="text" id="productImage" placeholder="tên file">
-                    </div>
+                    <input type="text" id="priceName" disabled>
                 </div>
                 <div class="form-group">
-                    <label>Mô tả</label>
-                    <textarea id="productDescription"></textarea>
+                    <label>Giá (VNĐ)</label>
+                    <input type="number" id="priceValue" required min="0">
                 </div>
                 <div class="button-group">
-                    <button type="button" class="btn-primary" onclick="saveProduct()">Lưu</button>
-                    <button type="button" class="btn-secondary" onclick="closeProductModal()">Hủy</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Promotion Modal -->
-    <div class="modal" id="promotionModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="promotionModalTitle">Thêm khuyến mại</h2>
-                <button class="close-btn" onclick="closePromotionModal()">&times;</button>
-            </div>
-            <form id="promotionForm">
-                <div class="form-group">
-                    <label>Tiêu đề</label>
-                    <input type="text" id="promotionTitle" required>
-                </div>
-                <div class="form-group">
-                    <label>Mô tả</label>
-                    <textarea id="promotionDescription"></textarea>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Giảm giá (%)</label>
-                        <input type="number" id="promotionDiscount" required min="0" max="100">
-                    </div>
-                    <div class="form-group">
-                        <label>Hạn sử dụng</label>
-                        <input type="date" id="promotionValidUntil" required>
-                    </div>
-                </div>
-                <div class="button-group">
-                    <button type="button" class="btn-primary" onclick="savePromotion()">Lưu</button>
-                    <button type="button" class="btn-secondary" onclick="closePromotionModal()">Hủy</button>
+                    <button type="button" class="btn-primary" onclick="savePrice()">Lưu</button>
+                    <button type="button" class="btn-secondary" onclick="closePriceModal()">Hủy</button>
                 </div>
             </form>
         </div>
