@@ -33,14 +33,7 @@ function setupScrollAnimations() {
 }
 
 function setupNavigation() {
-  const mobileMenuToggle = document.getElementById('mobileMenuToggle');
   const headerNav = document.getElementById('headerNav');
-
-  if (mobileMenuToggle && headerNav) {
-    mobileMenuToggle.addEventListener('click', () => {
-      headerNav.classList.toggle('active');
-    });
-  }
 
   const navLinks = document.querySelectorAll('.header-nav a');
   const sections = document.querySelectorAll('section');

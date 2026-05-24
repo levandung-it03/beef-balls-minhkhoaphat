@@ -93,10 +93,16 @@ header {
     gap: var(--spacing-md);
   }
   
+  .header-container {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+    position: relative;
+  }
+
   .header-nav {
     display: none;
     position: absolute;
-    top: 60px;
+    top: 100%;
     left: 0;
     right: 0;
     flex-direction: column;
@@ -105,7 +111,7 @@ header {
     border-bottom: 1px solid var(--color-border);
     padding: var(--spacing-lg) var(--spacing-md);
     box-shadow: var(--shadow-md);
-    z-index: 999;
+    z-index: 1100;
   }
   
   .header-nav.active {
