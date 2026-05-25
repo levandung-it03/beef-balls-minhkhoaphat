@@ -1,4 +1,4 @@
-const SALE_DATA_URL = './data/sale.json';
+import { saleData } from '../data/sale.js';
 const SELECTORS = {
   deliveryInfo: 'deliveryInfo',
   pricingContainer: 'pricingTableContainer'
@@ -86,18 +86,7 @@ async function fetchJson(url) {
   return response.json();
 }
 
-async function loadSaleData() {
-  try {
-    return await fetchJson(SALE_DATA_URL);
-  } catch (error) {
-    console.error('loadSaleData:', error);
-    return {};
-  }
-}
-
 async function initSalesInfo() {
-  const saleData = await loadSaleData();
-
   renderDeliveryInfo(saleData.delivery);
   renderPricingTable(saleData.price);
 }
